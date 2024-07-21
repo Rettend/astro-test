@@ -1,0 +1,29 @@
+{
+  "name": "astro-test",
+  "type": "module",
+  "version": "0.0.1",
+  "packageManager": "bun@1.1.20",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro check && astro build",
+    "preview": "astro preview",
+    "lint": "eslint --fix .",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/check": "^0.8.2",
+    "@astrojs/solid-js": "^4.4.0",
+    "@astrojs/vue": "^4.5.0",
+    "astro": "^4.12.2",
+    "solid-js": "^1.8.18",
+    "typescript": "^5.5.3",
+    "vue": "^3.4.33"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^2.23.1",
+    "eslint": "^9.7.0",
+    "eslint-plugin-astro": "^1.2.3",
+    "eslint-plugin-solid": "^0.14.1"
+  }
+}
