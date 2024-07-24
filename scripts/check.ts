@@ -132,6 +132,10 @@ export async function createMarkdownTable(results: Results) {
   readmeContent = `${readmeContent.slice(0, startIndex)}\n${table}\n${readmeContent.slice(endIndex)}`
 
   await Bun.write(readmePath, readmeContent)
+
+  const date = new Date().toISOString().split('T')[0]
+  const filePath = join(process.cwd(), 'benchmarks', `${date}.md`)
+  await Bun.write(filePath, `${table}\n`)
 }
 
 export function colorize(component: string) {
