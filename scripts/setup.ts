@@ -1,16 +1,17 @@
 import process from 'node:process'
 import path from 'node:path'
 import { $ } from 'bun'
-import { check, colorize, componentMap, components } from './check'
+import { ConsoleExtended, check, colorize, componentMap, components, createMarkdownTable, logResults, saveResults } from './check'
+
+const console = new ConsoleExtended(process.stdout, process.stderr, false)
 
 const templatePath = path.join(process.cwd(), 'src', 'pages', '_index.astro.template')
-const baseIndexPath = path.join(process.cwd(), 'src', 'pages', 'base.index.astro')
+const baseIndexPath = path.join(process.cwd(), 'src', 'pages', 'base.astro')
 const indexPath = path.join(process.cwd(), 'src', 'pages', 'index.astro')
 
 async function updateIndexFile(component: string) {
   const template = await Bun.file(templatePath).text()
   const componentFile = componentMap[component]
-
   const [name, ext] = componentFile?.split('.') ?? []
   const updatedContent = componentFile
     ? template
@@ -22,8 +23,15 @@ async function updateIndexFile(component: string) {
   await Bun.write(indexPath, updatedContent)
 }
 
+function getComponentsFromArgs() {
+  const args = process.argv.slice(2).filter(arg => components.includes(arg))
+  return args.length > 0 ? args : components
+}
+
 async function main() {
-  for (const component of components) {
+  const foundComponents = getComponentsFromArgs()
+
+  for (const component of foundComponents) {
     console.log(`Building ${colorize(component)}...`)
 
     await updateIndexFile(component)
@@ -33,9 +41,18 @@ async function main() {
     await $`mv dist dist-${component}`
   }
 
-  console.log('All builds completed.')
+  console.shout('All builds completed')
 
-  await check(components)
+  const isSort = process.argv.includes('--sort') || process.argv.includes('-s')
+  const results = await check(foundComponents)
+  logResults(results, isSort)
+
+  if (foundComponents === components) {
+    await saveResults(results)
+    console.shout('Results saved')
+    await createMarkdownTable(results)
+    console.shout('Markdown table created')
+  }
 }
 
 await main()

@@ -1,47 +1,38 @@
-# Astro Starter Kit: Minimal
+# astro-test
+
+Benchmarking framework bundle sizes with astro.
+
+## Latest Results
+
+The base bundle size is substracted from the framework bundle size to get the actual framework size.
+
+<!-- RESULTS_START -->
+| Framework | Versions | Size (KB) | Size (KB gzip) |
+| --------- | -------- | --------- | -------------- |
+| solid_astro | `astro@^4.12.2, @astrojs/solid-js@^4.4.0` | 0.76 | 0.62 |
+| vue_astro | `astro@^4.12.2, @astrojs/vue@^4.5.0` | 1.49 | 1.33 |
+| vue | `vue@^3.4.33` | 5.63 | 2.82 |
+| solid | `solid-js@^1.8.18` | 6.15 | 2.84 |
+| base | `astro@^4.12.2` | 73.11 | 30.80 |
+<!-- RESULTS_END -->
+
+## Usage
 
 ```sh
-npm create astro@latest -- --template minimal
+bun run bench [frameworks...] [options]
 ```
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/minimal)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/minimal)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/withastro/astro?devcontainer_path=.devcontainer/minimal/devcontainer.json)
+Running without arguments will benchmark all frameworks.
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+### Options
 
-## 🚀 Project Structure
+- `--sort`, `-s`: Sort by size. Default is false.
 
-Inside of your Astro project, you'll see the following folders and files:
+### Example
 
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+```sh
+bun run bench vue solid
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
-
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
-
-Any static assets, like images, can be placed in the `public/` directory.
-
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+>[!TIP]
+> Use `base` to compare against the base size.
