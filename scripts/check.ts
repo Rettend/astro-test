@@ -42,7 +42,7 @@ function getDirectorySize(directoryPath: string) {
 
 let baseSize = 0
 
-export function check() {
+export function check(components: string[]) {
   const longest = Math.max(...components.map(c => c.length))
 
   for (const component of components) {

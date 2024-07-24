@@ -1,25 +1,23 @@
 import process from 'node:process'
 import path from 'node:path'
 import { $ } from 'bun'
-import { components as c, check, colorize, componentMap } from './check'
-
-const components = ['solid_astro']
+import { check, colorize, componentMap, components } from './check'
 
 const templatePath = path.join(process.cwd(), 'src', 'pages', '_index.astro.template')
+const baseIndexPath = path.join(process.cwd(), 'src', 'pages', 'base.index.astro')
 const indexPath = path.join(process.cwd(), 'src', 'pages', 'index.astro')
 
 async function updateIndexFile(component: string) {
   const template = await Bun.file(templatePath).text()
   const componentFile = componentMap[component]
 
-  if (!componentFile)
-    return
-
-  const [name, ext] = componentFile.split('.')
-  const updatedContent = template
-    .replace('import COMPONENT from \'@components/COMPONENT.EXT\'', `import ${name} from '@components/${componentFile}'`)
-    .replace('<COMPONENT />', `<${name} ${ext === 'astro' ? '' : 'client:load '}/>`)
-    .replace('<span>COMPONENT</span>', `<span>${component}</span>`)
+  const [name, ext] = componentFile?.split('.') ?? []
+  const updatedContent = componentFile
+    ? template
+      .replace('import COMPONENT from \'@components/COMPONENT\'', `import ${name} from '@components/${componentFile}'`)
+      .replace('<COMPONENT />', `<${name} ${ext === 'astro' ? '' : 'client:load '}/>`)
+      .replace('<span>COMPONENT</span>', `<span>${component}</span>`)
+    : await Bun.file(baseIndexPath).text()
 
   await Bun.write(indexPath, updatedContent)
 }
@@ -37,7 +35,7 @@ async function main() {
 
   console.log('All builds completed.')
 
-  check()
+  check(components)
 }
 
-main().catch(console.error)
+await main()
