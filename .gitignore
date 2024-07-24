@@ -1,5 +1,8 @@
 # build output
 dist/
+dist-*/
+src/pages/index.astro
+
 # generated types
 .astro/
 

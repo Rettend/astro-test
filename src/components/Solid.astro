@@ -1,0 +1,19 @@
+---
+---
+
+<button id="solid-astro">Likes 0</button>
+
+<script>
+import { createEffect, createSignal } from 'solid-js'
+
+const button = document.getElementById('solid-astro')!
+const [likes, setLikes] = createSignal(0)
+
+button.onclick = () => {
+  setLikes(likes() + 1)
+}
+
+createEffect(() => {
+  button.textContent = `Likes ${likes()}`
+})
+</script>

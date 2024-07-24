@@ -1,0 +1,19 @@
+---
+---
+
+<button id="vue-astro">Likes 0</button>
+
+<script>
+import { effect, ref } from '@vue/reactivity'
+
+const button = document.getElementById('vue-astro')!
+const likes = ref(0)
+
+button.onclick = () => {
+  likes.value++
+}
+
+effect(() => {
+  button.textContent = `Likes ${likes.value}`
+})
+</script>
