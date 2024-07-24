@@ -35,7 +35,7 @@ async function main() {
 
   console.log('All builds completed.')
 
-  check(components)
+  await check(components)
 }
 
 await main()

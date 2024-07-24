@@ -23,37 +23,47 @@ export const componentMap = components.reduce((map, component, index) => {
   return map
 }, {} as Record<string, string | undefined>)
 
-function getDirectorySize(directoryPath: string) {
+async function getDirectorySize(directoryPath: string): Promise<[number, number]> {
   let totalSize = 0
+  let totalGzippedSize = 0
   const files = readdirSync(directoryPath)
 
   for (const file of files) {
     const filePath = join(directoryPath, file)
     const stats = statSync(filePath)
 
-    if (stats.isFile())
+    if (stats.isFile()) {
       totalSize += stats.size
-    else if (stats.isDirectory())
-      totalSize += getDirectorySize(filePath)
+      const fileContent = await Bun.file(filePath).text()
+      totalGzippedSize += Bun.gzipSync(fileContent).length
+    }
+    else if (stats.isDirectory()) {
+      const [dirSize, dirGzippedSize] = await getDirectorySize(filePath)
+      totalSize += dirSize
+      totalGzippedSize += dirGzippedSize
+    }
   }
 
-  return totalSize
+  return [totalSize, totalGzippedSize]
 }
 
 let baseSize = 0
+let baseGzippedSize = 0
 
-export function check(components: string[]) {
+export async function check(components: string[]) {
   const longest = Math.max(...components.map(c => c.length))
 
   for (const component of components) {
     const dirPath = `dist-${component}`
-    const size = getDirectorySize(dirPath)
+    const [size, gzippedSize] = await getDirectorySize(dirPath)
 
     const paddedComponent = component.padEnd(longest + 15, '.')
-    console.log(`${colorize(paddedComponent)} ${((size - baseSize) / 1024).toFixed(2)} kB`)
+    console.log(`${colorize(paddedComponent)} ${((size - baseSize) / 1024).toFixed(2)} kB ${chalk.gray(`(${((gzippedSize - baseGzippedSize) / 1024).toFixed(2)} kB gzipped)`)}`)
 
-    if (component === 'base')
+    if (component === 'base') {
       baseSize = size
+      baseGzippedSize = gzippedSize
+    }
   }
 }
 
