@@ -1,15 +1,14 @@
 import process from 'node:process'
 import path from 'node:path'
 import { $ } from 'bun'
-import { ConsoleExtended, check, colorize, componentMap, components, createMarkdownTable, logResults, saveResults } from './check'
-
-const console = new ConsoleExtended(process.stdout, process.stderr, false)
+import { type Component, componentMap, components, isComponent } from './check'
+import { console } from './console'
 
 const templatePath = path.join(process.cwd(), 'src', 'pages', '_index.astro.template')
 const baseIndexPath = path.join(process.cwd(), 'src', 'pages', 'base.astro')
 const indexPath = path.join(process.cwd(), 'src', 'pages', 'index.astro')
 
-async function updateIndexFile(component: string) {
+async function updateIndexFile(component: Component) {
   const template = await Bun.file(templatePath).text()
   const componentFile = componentMap[component]
   const [name, ext] = componentFile?.split('.') ?? []
@@ -23,16 +22,14 @@ async function updateIndexFile(component: string) {
   await Bun.write(indexPath, updatedContent)
 }
 
-function getComponentsFromArgs() {
-  const args = process.argv.slice(2).filter(arg => components.includes(arg))
-  return args.length > 0 ? args : components
+export function getComponentsFromArgs(): Component[] {
+  const args = process.argv.slice(2).filter(isComponent)
+  return args.length > 0 ? args : [...components]
 }
 
-async function main() {
-  const foundComponents = getComponentsFromArgs()
-
-  for (const component of foundComponents) {
-    console.log(`Building ${colorize(component)}...`)
+export async function build(components: Component[]) {
+  for (const component of components) {
+    console.colorize(`Building ${component}...`)
 
     await updateIndexFile(component)
 
@@ -41,18 +38,5 @@ async function main() {
     await $`mv dist dist-${component}`
   }
 
-  console.shout('All builds completed')
-
-  const isSort = process.argv.includes('--sort') || process.argv.includes('-s')
-  const results = await check(foundComponents)
-  logResults(results, isSort)
-
-  if (foundComponents === components) {
-    await saveResults(results)
-    console.shout('Results saved')
-    await createMarkdownTable(results)
-    console.shout('Markdown table created')
-  }
+  console.heading('All builds completed')
 }
-
-await main()

@@ -16,6 +16,21 @@ The base bundle size is substracted from the framework bundle size to get the ac
 | base | `astro@^4.12.2` | 73.11 | 30.80 |
 <!-- RESULTS_END -->
 
+actual:
+
+- solid_astro: 8 KB (gzip: 5.6 KB)
+- vue_astro: 15.2 KB (gzip: 8.3 KB)
+- vue: 69.6 KB (gzip: 30.6 KB)
+- solid: 18.1 KB (gzip: 10.1 KB)
+- base: 1.6 KB (gzip: 2.2 KB)
+
+Results:
+base: 1.59 KB (gzip: 0.88 KB)
+vue_astro: 1.88 KB (gzip: 1.12 KB)
+solid_astro: 1.87 KB (gzip: 1.11 KB)
+vue: 5.55 KB (gzip: 2.50 KB) // missing: client.CMMtWkl7.js
+solid: 5.95 KB (gzip: 2.71 KB)
+
 ## Usage
 
 ```sh

@@ -1,0 +1,33 @@
+{
+  "base": {
+    "size": 74861,
+    "gzippedSize": 31543,
+    "version": "astro@^4.12.2"
+  },
+  "vue_astro": {
+    "size": 1529,
+    "gzippedSize": 1358,
+    "version": [
+      "astro@^4.12.2",
+      "@astrojs/vue@^4.5.0"
+    ]
+  },
+  "solid_astro": {
+    "size": 780,
+    "gzippedSize": 634,
+    "version": [
+      "astro@^4.12.2",
+      "@astrojs/solid-js@^4.4.0"
+    ]
+  },
+  "vue": {
+    "size": 5764,
+    "gzippedSize": 2886,
+    "version": "vue@^3.4.33"
+  },
+  "solid": {
+    "size": 6300,
+    "gzippedSize": 2905,
+    "version": "solid-js@^1.8.18"
+  }
+}
